@@ -54,10 +54,10 @@ def int_check(question, exit_code=None):
 mode = "regular"
 rounds_played = 0
 end_game = "no"
-feedback = ""
+
 rounds_lost = 0
 game_history = []
-guesses_allowed = 1
+
 guess = ""
 
 
@@ -116,10 +116,11 @@ while rounds_played < num_rounds:
     # print("Spoiler Alert!!!", answer)       # remove this line after testing !!!
 
     if a_p == "area":
-        guess = int_check(f"A rectangle has a base of {num1}cm and a height of {num2}cm, what is the AREA in cm? : ", "xxx")
+        guess = int_check(f"A rectangle has a base of {num1}cm and a height of {num2}cm, what is the AREA in cm²? : ", "xxx")
     else:
         guess = int_check(f"A rectangle has a base of {num1}cm and a height of {num2}cm, what is the PERIMETERS in cm? : ", "xxx")
 
+    # allow user to exit game
     if guess == "xxx":
         end_game = "yes"
         break
@@ -160,8 +161,8 @@ if rounds_played > 0:
     # output game statistics
     print()
     print("📊📊📊Game Statistics📊📊📊")
-    print(f"👍Won: {percent_won: .2f} \t "
-          f"😢Lost: {percent_lost:.2f} \t ")
+    print(f"👍Correct: {percent_won: .2f} \t "
+          f"😢Wrong: {percent_lost:.2f} \t ")
 
     # Ask user if they want to see their game history output if it requested
     see_history = yes_no("\nDo you want to see your Game History? ")
@@ -175,3 +176,4 @@ else:
 
 print()
 print("Thanks for playing !")
+
