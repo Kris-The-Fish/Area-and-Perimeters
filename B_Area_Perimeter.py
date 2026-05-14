@@ -52,11 +52,11 @@ def int_check(question, exit_code=None):
 
 # game variables
 mode = "regular"
-rounds_played = 0
-end_game = "no"
+questions_asked = 0
+end_quiz = "no"
 
-rounds_lost = 0
-game_history = []
+answered_wrong = 0
+quiz_history = []
 
 guess = ""
 
@@ -74,106 +74,116 @@ if want_instructions == "no":
     print("OK! No instructions it is!")
 print()
 
-num_rounds = int_check("Rounds ? ", exit_code="")
-
-if num_rounds == "":
+# ask the user how many rounds they would like. <enter for infinite>
+num_of_questions = int_check("How many questions would you like to answer ? <enter for infinite> ", exit_code="")
+if num_of_questions == "":
     mode = "infinite"
-    num_rounds = 5
+    num_of_questions = 5
     print("♾️you have picked infinite mode!♾️")
 else:
-    print(f"💿you have picked [{num_rounds}] rounds!💿")
+    print(f"❓you have picked [{num_of_questions}] rounds!❓")
 
-while rounds_played < num_rounds:
+# rounds
+while questions_asked < num_of_questions:
 
-    # rounds heading
+    # Question heading
     if mode == "infinite":
-        rounds_heading = f"\n♾️️️♾️️️♾️️️ Round {rounds_played + 1} (Infinite Mode) ♾️️️♾️️️♾️️️"
+        rounds_heading = f"\n♾️️️♾️️️♾️️️ Question {questions_asked + 1} (Infinite Mode) ♾️️️♾️️️♾️️️"
     else:
-        rounds_heading = f"\n💿💿💿 Round {rounds_played + 1} of {num_rounds} 💿💿💿"
+        rounds_heading = f"\n❓❓❓ Question {questions_asked + 1} of {num_of_questions} ❓❓❓"
     print(rounds_heading)
     if mode == "infinite":
-        num_rounds += 1
+        num_of_questions += 1
 
-
+    # generate the numbers and whether it's area or perimeters at random
     num1 = random.randint(1, 25)
     num2 = random.randint(1, 25)
 
+    # calculate the answer
     area = num1 * num2
     perimeters = num1 + num2 + num1 + num2
-    # round starts here
 
-    a_p = random.randint(1, 2)
-    if a_p == 1:
-        a_p = "area"
+    # pick randomly between area and perimeters
+    area_or_perimeters = random.randint(1, 2)
+    if area_or_perimeters == 1:
+        area_or_perimeters = "area"
     else:
-        a_p = "parameters"
+        area_or_perimeters = "parameters"
 
-    if a_p == "area":
+    # answer matched up with the right one (area or perimeters)
+    if area_or_perimeters == "area":
         answer = area
     else:
         answer = perimeters
 
+    # round starts here
+
     # print("Spoiler Alert!!!", answer)       # remove this line after testing !!!
 
-    if a_p == "area":
+    # print question
+    if area_or_perimeters == "area":
         guess = int_check(f"A rectangle has a base of {num1}cm and a height of {num2}cm, what is the AREA in cm²? : ", "xxx")
     else:
         guess = int_check(f"A rectangle has a base of {num1}cm and a height of {num2}cm, what is the PERIMETERS in cm? : ", "xxx")
 
     # allow user to exit game
     if guess == "xxx":
-        end_game = "yes"
+        end_quiz = "yes"
         break
 
+    # if the user answer right, tell them. if wrong, also tell them, and add to the wong tally
     if guess == answer:
             feedback = "✅✅✅ Yes! that is Correct! good job ✅✅✅"
     else:
         feedback = f"❌❌❌ NO! that is wrong! the answer is [{answer}cm]! ❌❌❌"
-        rounds_lost += 1
+        answered_wrong += 1
 
     # print feedback to user
     print(feedback)
 
-
     # round ends here
 
     # if user has entered exit code, end game!!
-    if end_game == "yes":
+    if end_quiz == "yes":
         break
 
-    rounds_played += 1
+    questions_asked += 1
 
     # calculate statistics
-    rounds_won = rounds_played - rounds_lost
-    percent_won = rounds_won / rounds_played * 100
-    percent_lost = rounds_lost / rounds_played * 100
+    rounds_correct = questions_asked - answered_wrong
+    percent_correct = rounds_correct / questions_asked * 100
+    percent_lost = answered_wrong / questions_asked * 100
 
     # add round result to game history
-    history_feedback = f"\nRound {rounds_played}: {feedback}"
-    game_history.append(history_feedback)
+    history_feedback = f"\nRound {questions_asked}: {feedback}"
+    quiz_history.append(history_feedback)
 
-if rounds_played > 0:
+# history
+if questions_asked > 0:
     # calculate statistics
-    rounds_won = rounds_played - rounds_lost
-    percent_won = rounds_won / rounds_played * 100
-    percent_lost = rounds_lost / rounds_played * 100
+    rounds_correct = questions_asked - answered_wrong
+    percent_correct = rounds_correct / questions_asked * 100
+    percent_lost = answered_wrong / questions_asked * 100
 
     # output game statistics
     print()
     print("📊📊📊Game Statistics📊📊📊")
-    print(f"👍Correct: {percent_won: .2f} \t "
+    print(f"👍Correct: {percent_correct: .2f} \t "
           f"😢Wrong: {percent_lost:.2f} \t ")
 
     # Ask user if they want to see their game history output if it requested
     see_history = yes_no("\nDo you want to see your Game History? ")
     if see_history == "yes":
-        for item in game_history:
+        for item in quiz_history:
             print(item)
+
+        print()
+        print(f"📈📈📈 You got {rounds_correct} correct and {answered_wrong} wrong 📉📉📉")
 
 else:
     print()
     print("No History is available")
 
 print()
-print("Thanks for playing !")
-
+print("🍏 Thanks for using this quiz that I, Kris, made ! 🍏")
+print()
